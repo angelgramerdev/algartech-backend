@@ -12,7 +12,7 @@ namespace Domain.Entities
         public string Message { get; set; }
         public int Code { get; set; }
         public HttpStatusCode StatusCode { get; set; }
-        public List<Order> orders { get; set; }
+        public List<Order> orders { get; set; }  
         public List<Product> products { get; set; } 
 
     }

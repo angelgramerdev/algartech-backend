@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-    public interface IServiceProduct
+    public interface IServiceOrderProduct
     {
-        Task<ObjResponse> GetProducts(OrderProduct orderProduct);
+        Task<ObjResponse> Create(OrderProduct orderProduct);
     }
 }

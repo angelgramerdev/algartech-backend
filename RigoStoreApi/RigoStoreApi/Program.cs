@@ -18,10 +18,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RigoStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("conexionSql")));
 builder.Services.AddScoped<IOrderRepository<Order>, OrderRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ObjResponse>();
-builder.Services.AddScoped<Common>();
+builder.Services.AddScoped<IOrderProductRepository<OrderProduct>, OrderProductRepository>();
 builder.Services.AddScoped<IServiceOrder, ServiceOrder>();
 builder.Services.AddScoped<IServiceProduct, ServiceProduct>();
+builder.Services.AddScoped<IServiceOrderProduct, ServiceOrderProduct>();
+builder.Services.AddScoped<ObjResponse>();
+builder.Services.AddScoped<Common>();
 
 builder.Services.AddCors(options =>
 {
