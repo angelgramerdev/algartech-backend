@@ -57,21 +57,68 @@ namespace Infraestructure.Repositories
             }
         }
 
-        public Task<ObjResponse> Edit(Order entity)
+        public async Task<ObjResponse> Edit(Order entity)
         {
             try 
             {
                 ObjResponse response = null;
-                var command = new SqlCommand("create_order", _common.Conectar());
+                var command = new SqlCommand("edit_order", _common.Conectar());
                 command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@id", DbType.Int32) { Value = entity.Id });
                 command.Parameters.Add(new SqlParameter("@identification", DbType.String) { Value = entity.Identification });
                 command.Parameters.Add(new SqlParameter("@deliveryaddress", DbType.String) { Value = entity.DeliveryAddress });
                 command.Parameters.Add(new SqlParameter("@name", DbType.String) { Value = entity.Name });
-                command.Parameters.Add(new SqlParameter("@creationdate", DbType.DateTime) { Value = DateTime.Now });
+                var result=await command.ExecuteNonQueryAsync();  
+                
+                if (result < 0)
+                {
+                    response = await _common.GetGoodResponse();
+                    response.Message = "Order updated";
+                    return response;
+                }
+                return await _common.GetBadResponse();
             }
-            catch (Exception e) 
-            { 
-            
+            catch (Exception e)
+            {
+                return await _common.GetBadResponse();
+            }
+        }
+
+        public async Task<ObjResponse> GetOrder(int id)
+        {
+            try
+            {
+                Order order = null;
+                ObjResponse response = null;
+                var command = new SqlCommand("get_order", _common.Conectar());
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@id", DbType.String) { Value = id });
+                var reader = await command.ExecuteReaderAsync();
+                if (reader.HasRows)
+                {                
+                    //await reader.ReadAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        
+                        order=new Order
+                        {
+                            Id = (int)reader[0],
+                            Identification = reader[1].ToString(),
+                            DeliveryAddress = reader[2].ToString(),
+                            Name = reader[3].ToString(),                       
+                            CreationDate = (DateTime)reader[4]
+                        };
+                                              
+                    }
+                    response = await _common.GetGoodResponse();
+                    response.order = order;
+                    reader.Close();
+                }
+                return response;
+            }
+            catch (Exception e)
+            {
+                return await _common.GetBadResponse();
             }
         }
 

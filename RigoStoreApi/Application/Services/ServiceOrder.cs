@@ -57,5 +57,32 @@ namespace Application.Services
                 return await _commonResponse.GetBadResponse();
             }
         }
+
+        public async Task<ObjResponse> Edit(Order entity) 
+        {
+            try 
+            { 
+                var response=await _orderRepository.Edit(entity);   
+                return response;    
+            } catch (Exception e) 
+            { 
+                return await _commonResponse.GetBadResponse();
+            }
+        
+        }
+
+        public async Task<ObjResponse> GetOrder(int id)
+        {
+            try 
+            { 
+                var response=await _orderRepository.GetOrder(id); 
+                return response;
+            }
+            catch (Exception e) 
+            { 
+                return await _commonResponse.GetBadResponse();
+            }
+        
+        }
     }
 }

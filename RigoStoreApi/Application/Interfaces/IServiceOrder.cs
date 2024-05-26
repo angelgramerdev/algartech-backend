@@ -10,7 +10,9 @@ namespace Application.Interfaces
 {
     public interface IServiceOrder
     {
-        Task<ObjResponse> Create(Order order);
+        Task<ObjResponse> Create(Order entity);
         Task<ObjResponse> GetOrders();
+        Task<ObjResponse> GetOrder(int id);
+        Task<ObjResponse> Edit(Order entity);
     }
 }

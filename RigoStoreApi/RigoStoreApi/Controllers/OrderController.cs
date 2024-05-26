@@ -47,6 +47,36 @@ namespace RigoStoreApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost]
+        [Route("update_order")]
+        public async Task<IActionResult> Edit(Order entity) 
+        {
+            try 
+            {
+                var response =await _serviceOrder.Edit(entity);
+                return Ok(response);
+            }
+            catch (Exception e) 
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("get_order")]
+        public async Task<IActionResult> GetOrder(int id)
+        {
+            try 
+            {
+                var response =await _serviceOrder.GetOrder(id);
+                return Ok(response);
+            }
+            catch (Exception e) 
+            { 
+                return BadRequest();   
+            }
+        }
     
     }
 }
