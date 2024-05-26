@@ -1,7 +1,6 @@
 using Domain.Interfaces.Repositories;
 using Domain.Entities;
 using Infraestructure.Repositories;
-using Infraestructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Infraestructure.Common;
@@ -15,7 +14,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<RigoStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("conexionSql")));
+//builder.Services.AddDbContext<RigoStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("conexionSql")));
 builder.Services.AddScoped<IOrderRepository<Order>, OrderRepository>();
 builder.Services.AddScoped<IProductRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IOrderProductRepository<OrderProduct>, OrderProductRepository>();

@@ -14,9 +14,9 @@ namespace Infraestructure.Repositories
     public class OrderProductRepository : IOrderProductRepository<OrderProduct>
     {
         private readonly Common.Common _common;
-        private readonly IProductRepository _productRepository;
+        private readonly IProductRepository<Product> _productRepository;
 
-        public OrderProductRepository(Common.Common common, IProductRepository productRepository) 
+        public OrderProductRepository(Common.Common common, IProductRepository<Product> productRepository) 
         { 
             _common = common;
             _productRepository = productRepository;
