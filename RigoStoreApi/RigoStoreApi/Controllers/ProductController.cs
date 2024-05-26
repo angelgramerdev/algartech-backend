@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Domain.Entities;
 
 namespace RigoStoreApi.Controllers
 {
@@ -32,6 +33,20 @@ namespace RigoStoreApi.Controllers
         
         }
 
+        [HttpPost]
+        [Route("create_product")]
+        public async Task<IActionResult> Create(Product product) 
+        {
+            try
+            {
+                var response = await _serviceProduct.Create(product);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }

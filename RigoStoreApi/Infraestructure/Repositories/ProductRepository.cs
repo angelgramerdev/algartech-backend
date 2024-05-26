@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : IProductRepository<Product>
     {
 
         
@@ -83,6 +83,34 @@ namespace Infraestructure.Repositories
             }
             catch (Exception e) 
             { 
+                return await _common.GetBadResponse();
+            }
+        }
+
+        public async Task<ObjResponse> Create(Product entity)
+        {
+            try
+            {
+
+                ObjResponse response = null;
+                var command = new SqlCommand("create_product", _common.Conectar());
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@price", DbType.Decimal) { Value = entity.Price });
+                command.Parameters.Add(new SqlParameter("@reference", DbType.String) { Value = entity.Reference });
+                command.Parameters.Add(new SqlParameter("@name", DbType.String) { Value = entity.Name });
+                
+
+                var res = await command.ExecuteNonQueryAsync();
+                if (res < 0)
+                {
+                    response = await _common.GetGoodResponse();
+                    response.Message = "Product created";
+                    return response;
+                }
+                return await _common.GetBadResponse();
+            }
+            catch (Exception e)
+            {
                 return await _common.GetBadResponse();
             }
         }

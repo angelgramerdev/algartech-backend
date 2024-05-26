@@ -17,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RigoStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("conexionSql")));
 builder.Services.AddScoped<IOrderRepository<Order>, OrderRepository>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IOrderProductRepository<OrderProduct>, OrderProductRepository>();
 builder.Services.AddScoped<IServiceOrder, ServiceOrder>();
 builder.Services.AddScoped<IServiceProduct, ServiceProduct>();
