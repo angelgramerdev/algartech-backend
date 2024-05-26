@@ -14,17 +14,17 @@ namespace Application.Services
     {
         private ObjResponse _response;
         private readonly IOrderRepository<Order> _orderRepository;
-        private readonly Common _commonResponse;
+        private readonly Common _common;
         
         public ServiceOrder(ObjResponse response, 
             IOrderRepository<Order> orderRepository,
-            Common commonResponse
+            Common common
             ) 
 
         { 
             _orderRepository = orderRepository;
             _response = response;
-            _commonResponse = commonResponse;
+            _common = common;
         }
 
         public async Task<ObjResponse> Create(Order order)
@@ -34,14 +34,14 @@ namespace Application.Services
                _response=await _orderRepository.Create(order);
                 if (_response.Code == 400) 
                 {
-                  return  await _commonResponse.GetBadResponse();
+                  return  await _common.GetBadResponse();
                 }
 
                 return _response;
             }
             catch (Exception e) 
             {
-                return await _commonResponse.GetBadResponse();
+                return await _common.GetBadResponse();
             }
         }
 
@@ -54,7 +54,7 @@ namespace Application.Services
             }
             catch (Exception e) 
             { 
-                return await _commonResponse.GetBadResponse();
+                return await _common.GetBadResponse();
             }
         }
 
@@ -66,7 +66,7 @@ namespace Application.Services
                 return response;    
             } catch (Exception e) 
             { 
-                return await _commonResponse.GetBadResponse();
+                return await _common.GetBadResponse();
             }
         
         }
@@ -80,9 +80,22 @@ namespace Application.Services
             }
             catch (Exception e) 
             { 
-                return await _commonResponse.GetBadResponse();
+                return await _common.GetBadResponse();
             }
         
+        }
+
+        public async Task<ObjResponse> Delete(int id)
+        {
+            try
+            {   
+                var response = await _orderRepository.Delete(id);
+                return response;
+            }
+            catch (Exception e)
+            {
+                return await _common.GetBadResponse();
+            }
         }
     }
 }

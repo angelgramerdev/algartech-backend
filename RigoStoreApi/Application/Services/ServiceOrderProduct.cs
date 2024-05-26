@@ -33,5 +33,19 @@ namespace Application.Services
                 return await _common.GetBadResponse();
             }
         }
+
+        public async Task<ObjResponse> GetOrderProducts(int orderId) 
+        {
+            try
+            {
+                ObjResponse response = null;
+                response = await _orderProductRepository.GetOrderProducts(orderId);
+                return response;
+            }
+            catch (Exception e)
+            {
+                return await _common.GetBadResponse();
+            }
+        }
     }
 }

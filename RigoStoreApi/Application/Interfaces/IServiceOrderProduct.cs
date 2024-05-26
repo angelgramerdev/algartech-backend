@@ -10,5 +10,6 @@ namespace Application.Interfaces
     public interface IServiceOrderProduct
     {
         Task<ObjResponse> Create(OrderProduct orderProduct);
+        Task<ObjResponse> GetOrderProducts(int orderId);
     }
 }

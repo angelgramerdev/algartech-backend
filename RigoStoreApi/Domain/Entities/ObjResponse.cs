@@ -15,6 +15,7 @@ namespace Domain.Entities
         public Order order { get; set; }
         public List<Order> orders { get; set; }  
         public List<Product> products { get; set; } 
+        public List<OrderProduct> OrderProducts { get; set; }
         public Product product { get; set; } 
         public decimal total { get; set; }
 

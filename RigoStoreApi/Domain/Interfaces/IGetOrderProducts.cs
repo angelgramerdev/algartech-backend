@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IDeleteOrder
+    public interface IGetOrderProducts
     {
-        Task<ObjResponse> Delete(int id);  
+        Task<ObjResponse> GetOrderProducts(int orderId);
     }
 }

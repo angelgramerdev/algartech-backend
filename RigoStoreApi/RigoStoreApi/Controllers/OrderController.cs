@@ -48,7 +48,7 @@ namespace RigoStoreApi.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("update_order")]
         public async Task<IActionResult> Edit(Order entity) 
         {
@@ -75,6 +75,21 @@ namespace RigoStoreApi.Controllers
             catch (Exception e) 
             { 
                 return BadRequest();   
+            }
+        }
+
+        [HttpDelete]
+        [Route("delete_order")]
+        public async Task<IActionResult>Delete(int id) 
+        {
+            try
+            {
+                var response = await _serviceOrder.Delete(id);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
         }
     

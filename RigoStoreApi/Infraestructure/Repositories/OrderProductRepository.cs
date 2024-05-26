@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,6 +73,43 @@ namespace Infraestructure.Repositories
                 return await _common.GetBadResponse();    
             }
             catch(Exception ex) 
+            {
+                return await _common.GetBadResponse();
+            }
+        }
+
+        public async Task<ObjResponse> GetOrderProducts(int orderId)
+        {
+            try
+            {
+                ObjResponse response = null;
+                decimal total = 0;
+                var command = new SqlCommand("get_order_products", _common.Conectar());
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@orderid", DbType.Int32) { Value = orderId });
+                var reader = await command.ExecuteReaderAsync();
+                if (reader.HasRows)
+                {
+                    List<OrderProduct> orderProducts = new List<OrderProduct>();
+                    //await reader.ReadAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        
+                        orderProducts.Add(new OrderProduct
+                        {                           
+                            ProductId=reader.GetInt32("productid"),
+                            Name = reader.GetString("name"),
+                            Price=reader.GetDecimal("price")                                                   
+                        });
+                    }
+                    response = await _common.GetGoodResponse();
+                    response.OrderProducts = orderProducts;
+                    reader.Close();
+                }
+
+                return response;
+            }
+            catch (Exception e)
             {
                 return await _common.GetBadResponse();
             }

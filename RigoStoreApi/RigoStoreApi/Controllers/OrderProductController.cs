@@ -31,6 +31,19 @@ namespace RigoStoreApi.Controllers
             }
         }
 
-
+        [HttpGet]
+        [Route("get_order_products")]
+        public async Task<IActionResult> GetOrderProducts(int orderId) 
+        {
+            try
+            {
+                var response = await _serviceOrderProduct.GetOrderProducts(orderId);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

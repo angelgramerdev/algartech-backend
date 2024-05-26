@@ -14,5 +14,6 @@ namespace Application.Interfaces
         Task<ObjResponse> GetOrders();
         Task<ObjResponse> GetOrder(int id);
         Task<ObjResponse> Edit(Order entity);
+        Task<ObjResponse> Delete(int id);   
     }
 }

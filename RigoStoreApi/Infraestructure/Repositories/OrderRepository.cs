@@ -57,6 +57,30 @@ namespace Infraestructure.Repositories
             }
         }
 
+        public async Task<ObjResponse> Delete(int id)
+        {
+            try
+            {
+                ObjResponse response = null;
+                var command = new SqlCommand("delete_order", _common.Conectar());
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@id", DbType.Int32) { Value = id });
+                var result = await command.ExecuteNonQueryAsync();
+
+                if (result < 0)
+                {
+                    response = await _common.GetGoodResponse();
+                    response.Message = "Order deleted";
+                    return response;
+                }
+                return await _common.GetBadResponse();
+            }
+            catch (Exception e)
+            {
+                return await _common.GetBadResponse();
+            }
+        }
+
         public async Task<ObjResponse> Edit(Order entity)
         {
             try 
