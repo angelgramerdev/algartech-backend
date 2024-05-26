@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using Microsoft.Extensions.Configuration;
 
 
 namespace Infraestructure.Common
@@ -15,10 +16,12 @@ namespace Infraestructure.Common
     public class Common
     {
         private readonly ObjResponse _response;
+        private readonly IConfiguration _config;
       
-        public Common(ObjResponse response) 
+        public Common(ObjResponse response, IConfiguration config) 
         { 
-            _response = response;   
+            _response = response;
+            _config = config;
         }
 
         public async Task<ObjResponse> GetBadResponse()
@@ -37,9 +40,8 @@ namespace Infraestructure.Common
         }
 
         public SqlConnection Conectar()
-        {
-            string datosConneccion = "Server=DESKTOP-BVDLDCJ\\SQLEXPRESS;Database=dbrigostore;User ID=sa;Password=1234;Trusted_Connection=true;MultipleActiveResultSets=true";
-            SqlConnection con = new SqlConnection(datosConneccion);
+        {        
+            SqlConnection con = new SqlConnection(_config.GetConnectionString("conexionSql"));
             if (con.State == ConnectionState.Closed) 
             { 
                 con.Open();
