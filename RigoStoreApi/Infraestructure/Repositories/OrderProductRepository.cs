@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Numerics;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,10 +25,11 @@ namespace Infraestructure.Repositories
 
         public async Task<ObjResponse> CalculateOrder(int orderId)
         {
+            decimal? total = 0;
             try 
             {
                 ObjResponse response = null;
-                decimal total = 0;
+                
                 var command = new SqlCommand("calculate_total_order", _common.Conectar());
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Add(new SqlParameter("@orderid", DbType.Int32) { Value = orderId });
@@ -36,7 +38,7 @@ namespace Infraestructure.Repositories
                 { 
                     while (await result.ReadAsync()) 
                     {
-                        total = result.GetDecimal("total");
+                        total = (result.IsDBNull(0) ? 0: result.GetDecimal("total"));
                     }
                     response =await _common.GetGoodResponse();
                     response.total = total;
@@ -45,7 +47,7 @@ namespace Infraestructure.Repositories
                 return response;
             }
             catch(Exception e) 
-            { 
+            {              
                 return await _common.GetBadResponse();
             }
         }
@@ -67,6 +69,7 @@ namespace Infraestructure.Repositories
                 if (result <=0) 
                 {
                     response =await _common.GetGoodResponse();
+                    response.Message = "Product was added";
                     return response;
                 }
 

@@ -16,7 +16,7 @@ namespace Domain.Entities
         public string DeliveryAddress { get; set; }
         [MaxLength(200)]
         public string Name { get; set; }
-        public decimal Total { get; set; }
+        public decimal? Total { get; set; }
         public DateTime CreationDate { get; set; }
         public virtual List<Product>? Products { get; set; } 
 

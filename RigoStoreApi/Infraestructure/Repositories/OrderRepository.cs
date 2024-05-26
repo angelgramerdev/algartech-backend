@@ -179,6 +179,7 @@ namespace Infraestructure.Repositories
             }
             catch (Exception e) 
             {
+              
               return await _common.GetBadResponse();
             }
         }
