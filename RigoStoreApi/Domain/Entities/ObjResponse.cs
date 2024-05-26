@@ -14,6 +14,8 @@ namespace Domain.Entities
         public HttpStatusCode StatusCode { get; set; }
         public List<Order> orders { get; set; }  
         public List<Product> products { get; set; } 
+        public Product product { get; set; } 
+        public decimal total { get; set; }
 
     }
 }

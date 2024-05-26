@@ -8,7 +8,7 @@ namespace Domain.Entities
 {
     public class OrderProduct
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public decimal Price { get; set; }  
         public int ProductId { get; set; }
         public int OrderId { get; set; }

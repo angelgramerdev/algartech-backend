@@ -16,15 +16,16 @@ namespace Infraestructure.Repositories
 {
     public class OrderRepository : IOrderRepository<Order>
     {
-        private ObjResponse _response;   
+          
         private readonly Common.Common _common;
+        private readonly IOrderProductRepository<OrderProduct> _orderProductRepository;
 
         public OrderRepository(ObjResponse response, 
-            RigoStoreContext context,
-            Common.Common common
+            Common.Common common,
+            IOrderProductRepository<OrderProduct> orderProductRepository
             ) 
         {        
-            _response = response;
+            _orderProductRepository = orderProductRepository;
             _common = common;   
         }
 
@@ -32,29 +33,8 @@ namespace Infraestructure.Repositories
         {
             try
             {
-                //var identification = new SqlParameter("@identification", SqlDbType.NVarChar) { Value = entity.Identification };
-                //var deliveryAddress = new SqlParameter("@deliveryaddress", SqlDbType.NVarChar) { Value = entity.DeliveryAddress };
-                //var name = new SqlParameter("@name", SqlDbType.NVarChar) { Value = entity.Name };
-                //var creationDate = new SqlParameter("@creationdate", SqlDbType.DateTime) { Value = DateTime.Now };
-
-                //var identification = new SqlParameter("identification", entity.Identification);
-                //var deliveryAddress = new SqlParameter("deliveryaddress", entity.DeliveryAddress);
-                //var name = new SqlParameter("name", entity.Name);
-                //var creationDate = new SqlParameter("creationdate", DateTime.Now);
-
-                //DataLayer.DataAccess.AddParamater("@CategoryName", CategoryName, System.Data.SqlDbType.NVarChar, 200)
-
-                //var sqlParams = new SqlParameter[] {
-                //  new SqlParameter("@identification", entity.Identification),
-                //  new SqlParameter("@deliveryaddress", entity.DeliveryAddress),
-                //  new SqlParameter("@name", entity.Name),
-                //  new SqlParameter("@creationdate", DateTime.Now)
-                //{
-                //  Direction = System.Data.ParameterDirection.Input
-                //}
-                //};
-                //var result =_context.CreateOrder("exec create_order", identification, deliveryAddress, name, creationDate);
-                //var result = _context.Orders.FromSqlRaw("exec create_order",identification, deliveryAddress, name, creationDate);
+               
+                ObjResponse response = null;
                 var command = new SqlCommand("create_order",_common.Conectar());
                 command.CommandType = CommandType.StoredProcedure;             
                 command.Parameters.Add(new SqlParameter("@identification", DbType.String) { Value = entity.Identification });
@@ -65,9 +45,9 @@ namespace Infraestructure.Repositories
                 var res = await command.ExecuteNonQueryAsync();
                 if (res < 0)
                 {
-                    _response =await _common.GetGoodResponse();
-                    _response.Message = "Order created";
-                    return _response;
+                    response =await _common.GetGoodResponse();
+                    response.Message = "Order created";
+                    return response;
                 }
                 return await _common.GetBadResponse();
             }
@@ -77,10 +57,29 @@ namespace Infraestructure.Repositories
             }
         }
 
+        public Task<ObjResponse> Edit(Order entity)
+        {
+            try 
+            {
+                ObjResponse response = null;
+                var command = new SqlCommand("create_order", _common.Conectar());
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@identification", DbType.String) { Value = entity.Identification });
+                command.Parameters.Add(new SqlParameter("@deliveryaddress", DbType.String) { Value = entity.DeliveryAddress });
+                command.Parameters.Add(new SqlParameter("@name", DbType.String) { Value = entity.Name });
+                command.Parameters.Add(new SqlParameter("@creationdate", DbType.DateTime) { Value = DateTime.Now });
+            }
+            catch (Exception e) 
+            { 
+            
+            }
+        }
+
         public async Task<ObjResponse> GetOrders() 
         {
             try
             {
+                ObjResponse response = null;
                 var command = new SqlCommand("get_orders", _common.Conectar());
                 command.CommandType = CommandType.StoredProcedure;
                 var reader=await command.ExecuteReaderAsync();
@@ -90,7 +89,7 @@ namespace Infraestructure.Repositories
                     //await reader.ReadAsync();
                     while (await reader.ReadAsync()) 
                     {
-                        var colunm=reader[0];
+                        var order = await _orderProductRepository.CalculateOrder(reader.GetInt32("id"));
                         orders.Add(new Order
                         {
 
@@ -98,14 +97,15 @@ namespace Infraestructure.Repositories
                             Identification = reader[1].ToString(),
                             DeliveryAddress = reader[2].ToString(),
                             Name = reader[3].ToString(),
+                            Total =order.total,
                             CreationDate =(DateTime)reader[4]
                         });
                     }
-                    _response = await _common.GetGoodResponse();    
-                    _response.orders = orders;  
+                    response = await _common.GetGoodResponse();    
+                    response.orders = orders;  
                     reader.Close(); 
                 }
-                return _response;
+                return response;
             }
             catch (Exception e) 
             {

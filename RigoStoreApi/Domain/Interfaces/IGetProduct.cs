@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Interfaces.Repositories
+namespace Domain.Interfaces
 {
-    public interface IProductRepository:IGetProducts,IGetProduct
+    public interface IGetProduct
     {
-                
+        Task<ObjResponse> GetProduct(int id);
     }
 }

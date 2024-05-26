@@ -9,6 +9,6 @@ namespace Application.Interfaces
 {
     public interface IServiceProduct
     {
-        Task<ObjResponse> GetProducts(OrderProduct orderProduct);
+        Task<ObjResponse> GetProducts();
     }
 }

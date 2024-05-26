@@ -14,17 +14,17 @@ namespace Infraestructure.Repositories
     public class ProductRepository : IProductRepository
     {
 
-        private ObjResponse _response;
+        
         private readonly Common.Common _common;
         public ProductRepository(ObjResponse response, Common.Common common) 
         { 
             _common = common;
-            _response = response;
         }
         public async Task<ObjResponse> GetProducts()
         {
             try
             {
+                ObjResponse response = null;
                 var command = new SqlCommand("get_products", _common.Conectar());
                 command.CommandType = CommandType.StoredProcedure;
                 SqlDataReader reader =await command.ExecuteReaderAsync();
@@ -41,11 +41,45 @@ namespace Infraestructure.Repositories
                         
                         });
                     }
-                    _response =await _common.GetGoodResponse();
-                    _response.products = products;  
+                    response =await _common.GetGoodResponse();
+                    response.products = products;  
                 }
 
-                return _response;
+                return response;
+            }
+            catch (Exception e) 
+            { 
+                return await _common.GetBadResponse();
+            }
+        }
+
+        public async Task<ObjResponse> GetProduct(int id)
+        {
+            try
+            {
+                ObjResponse response = null;
+                var command = new SqlCommand("get_product", _common.Conectar());
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@id", DbType.Int32) { Value = id });
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                    
+                if (reader.HasRows) 
+                {
+                    Product product = new Product();
+                    while (await reader.ReadAsync()) 
+                    { 
+                        product.Id=id;
+                        product.Name = reader.GetString("name");
+                        product.Price = reader.GetDecimal("price");
+                    }
+                
+                   response=await _common.GetGoodResponse();
+                   response.product = product;
+
+                  return response;
+                }
+
+               return await _common.GetGoodResponse();
             }
             catch (Exception e) 
             { 
